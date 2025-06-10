@@ -71,7 +71,7 @@ class TemperatureGraph : Activity() {
             }
 
 //            chart.clear()
-            chart.setData(LineData(lines[1], lines[3]))
+            chart.setData(LineData(lines[0], lines[1]))
         }
     }
 }
