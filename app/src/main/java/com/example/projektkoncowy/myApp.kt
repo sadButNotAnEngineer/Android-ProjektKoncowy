@@ -42,6 +42,9 @@ class MyApp: Application() {
 //            },0L,1000L)
 
             socket.outputStream.write( "get $readingsLen".toByteArray())
+
+            socket.inputStream.readAllBytes()
+
             val reader = BufferedReader(InputStreamReader(socket.inputStream))
             var line = reader.readLine()
 

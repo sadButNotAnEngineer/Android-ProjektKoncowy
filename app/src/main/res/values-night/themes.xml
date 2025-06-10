@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.myTheme" parent="@style/Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">#0028FF</item>
-        <item name="android:navigationBarColor">#08198E</item>
-        <item name="android:statusBarColor">#08198E</item>
+        <item name="android:windowBackground">#434343</item>
+        <item name="android:navigationBarColor">#000000</item>
+        <item name="android:statusBarColor">#000000</item>
         <item name="android:splashScreenTheme">@style/Theme.Splash</item>
     </style>
     <style name="Theme.Splash" parent="Theme.SplashScreen">
         <!-- Set your custom splash screen icon -->
         <item name="windowSplashScreenBackground">#000000</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/baseline_cloud_108</item>
     </style>
 </resources>
