@@ -32,48 +32,45 @@ class MyApp: Application() {
         internetThread.start()
     }
     val internetThread = Thread {
-        try {
-            socket = Socket("145.239.88.95", 20000)
-
-//            Timer("connectionCheck").schedule( object : TimerTask() {
-//                override fun run() {
-//                    Log.d("socket", "isConnected: ${socket.isConnected} isClosed: ${socket.isClosed}")
-//                }
-//            },0L,1000L)
-
-            socket.outputStream.write( "get $readingsLen".toByteArray())
-
-            socket.inputStream.readAllBytes()
-
-            val reader = BufferedReader(InputStreamReader(socket.inputStream))
-            var line = reader.readLine()
-
-            DHT_RH.clear()
-            BMA_P.clear()
-            DHT_T.clear()
-            BMA_T.clear()
-
-            t0 = now().epochSecond
-
-            while (!line.isEmpty()) {
-                // data ordnung UNIX_TIMESTAMP(time), DHT_RH, DHT_T, BMA_P, BMA_T
-                val temp = line.split(',')
-                val time = (temp[0].toInt() - t0).toFloat()
-                DHT_RH.add(Entry(time,temp[1].toFloat()))
-                DHT_T.add(Entry(time,temp[2].toFloat()))
-                BMA_P.add(Entry(time,temp[3].toFloat()))
-                BMA_T.add(Entry(time,temp[4].toFloat()))
-                line = reader.readLine()
+        while (true) {
+            try {
+                socket = Socket("145.239.88.95", 20000)
+            } catch (e: java.lang.Exception) {
+                Log.d("iThread", "exception: $e")
             }
+            try {
+                socket.outputStream.write( "get $readingsLen".toByteArray())
 
-        } catch (e: ConnectException){
-            Log.d("socket", "connect exception: $e")
-            Thread.currentThread().join()
-        } catch(e: Exception) {
-            Log.d("socket", "exception: $e")
+                DHT_RH.clear()
+                BMA_P.clear()
+                DHT_T.clear()
+                BMA_T.clear()
+                t0 = now().epochSecond
+
+                socket.inputStream.reader().readLines().forEach {
+                    // data ordnung UNIX_TIMESTAMP(time), DHT_RH, DHT_T, BMA_P, BMA_T
+                    try {
+                    val temp = it.split(',')
+                    val time = (temp[0].toInt() - t0).toFloat()
+                    DHT_RH.add(Entry(time, temp[1].toFloat()))
+                    DHT_T.add(Entry(time, temp[2].toFloat()))
+                    BMA_P.add(Entry(time, temp[3].toFloat()))
+                    BMA_T.add(Entry(time, temp[4].toFloat()))
+
+                    } catch(e: NumberFormatException) {
+                        Log.d("iThread", "NumberFormatException: ${e.message}")
+                    }
+                }
+
+            } catch (e: ConnectException){
+                Log.d("iThread", "connect exception: $e")
+                Thread.currentThread().join()
+            } catch(e: Exception) {
+                Log.d("iThread", "exception: $e")
+            }
+            android.os.Handler(mainLooper).postDelayed({dataReadyCallback?.run()},50L)
+            Thread.sleep(10000)
         }
-        android.os.Handler(mainLooper).postDelayed({dataReadyCallback?.run()},50L)
-        Thread.sleep(10000)
     }
 
 }

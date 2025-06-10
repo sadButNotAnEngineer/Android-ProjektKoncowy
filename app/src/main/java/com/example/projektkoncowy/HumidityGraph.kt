@@ -55,7 +55,6 @@ class HumidityGraph : Activity() {
     }
 
     fun syncChart() {
-        Log.d("ithread state", (application as MyApp).internetThread.state.toString())
         if ((application as MyApp).internetThread.state in listOf(
                 Thread.State.WAITING,
                 Thread.State.TIMED_WAITING,
@@ -71,9 +70,8 @@ class HumidityGraph : Activity() {
             line.setDrawCircles(false)
             line.lineWidth = 3f
 
-            chart.clear()
+//            chart.clear()
             chart.setData(LineData(line))
-            Log.d("graph", "pressure")
         }
     }
 }

@@ -54,29 +54,23 @@ class TemperatureGraph : Activity() {
         syncChart()
     }
     fun syncChart(){
-        Log.d("iThread state", (application as MyApp).internetThread.state.toString())
         if((application as MyApp).internetThread.state in listOf(Thread.State.WAITING, Thread.State.TIMED_WAITING, Thread.State.TERMINATED)){
 
-            (application as MyApp).DHT_T.removeIf { (it!!.y > 40) or (it.y < 15) }
-            (application as MyApp).BMA_P.removeIf { it!!.y < 90000 }
+            (application as MyApp).DHT_T.removeIf { (it!!.y > 27) or (it.y < 15) }
 
             val lines = listOf(
-                LineDataSet((application as MyApp).DHT_RH,"DHT_RH"),
                 LineDataSet((application as MyApp).DHT_T,"DHT_T"),
-                LineDataSet((application as MyApp).BMA_P,"BMA_P"),
                 LineDataSet((application as MyApp).BMA_T,"BMA_T")
             )
             lines[0].setColor(getColor(R.color.line_blue))
             lines[1].setColor(getColor(R.color.line_red))
-            lines[2].setColor(getColor(R.color.line_green))
-            lines[3].setColor(getColor(R.color.line_orange))
 
             for (line in lines){
                 line.setDrawCircles(false)
                 line.lineWidth = 3f
             }
 
-            chart.clear()
+//            chart.clear()
             chart.setData(LineData(lines[1], lines[3]))
         }
     }
